@@ -1,11 +1,43 @@
 import nltk
+import ssl
+
+# Fix SSL certificate issue and download NLTK data
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    pass
+else:
+    ssl._create_default_https_context = _create_unverified_https_context
+
+# Download required NLTK data
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt', quiet=True)
+    
+try:
+    nltk.data.find('tokenizers/punkt_tab')
+except LookupError:
+    nltk.download('punkt_tab', quiet=True)
+
+try:
+    nltk.data.find('corpora/stopwords')
+except LookupError:
+    nltk.download('stopwords', quiet=True)
+
+try:
+    nltk.data.find('corpora/wordnet')
+except LookupError:
+    nltk.download('wordnet', quiet=True)
+
+# Now continue with the rest of imports
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 import re
 from difflib import SequenceMatcher
-from dataset import training_data
 from textblob import TextBlob
+from dataset import training_data
 
 # Initialize lemmatizer and stopwords
 lemmatizer = WordNetLemmatizer()
